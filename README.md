@@ -68,8 +68,11 @@ The timestamp when the message was produced to the retry topic, in UNIX epoch mi
 how long a message has been queued for retry.
 
 ### Configuration
-Application configuration is controlled via the following environment variables: 
+Application configuration is controlled via environment variables. Consult the 
+[application.yml](src/main/resources/application.yml) file for a complete list. Further documentation on Kafka properties
+can be found with the Spring Cloud Stream Kafka Binder project. Some important variables are listed below:
 
+* `KAFKA_RETRY_BOOTSTRAP_SERVERS` - Address for the Kafka bootstrap servers. Default: localhost:9091.
 * `KAFKA_RETRY_STREAMS_APP_ID` - Kafka Streams application ID. Default: "kafka-retry".
 * `KAFKA_RETRY_INPUT_TOPIC` - Input topic for retry messages. Default "retry".
 * `KAFKA_RETRY_RETRIABLE_EXCEPTION` - Retriable exception name.
