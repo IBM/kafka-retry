@@ -1,0 +1,90 @@
+/*
+ * Copyright 2020 IBM Inc. All rights reserved
+ * SPDX-License-Identifier: Apache2.0
+ */
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.15.RELEASE"
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+project.group = groupId
+project.version = version
+
+configurations.all {
+    resolutionStrategy {
+        cacheDynamicVersionsFor 0, "seconds"
+        cacheChangingModulesFor 0, "seconds"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR6'
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
+    implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka-streams'
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'org.apache.commons:commons-lang3:3.11'
+    annotationProcessor 'org.projectlombok:lombok:1.18.+'
+    compileOnly 'org.projectlombok:lombok:1.18.+'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+    testImplementation 'org.apache.kafka:kafka-streams-test-utils'
+    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-stream', classifier: 'test-binder'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.4.+'
+    testCompileOnly 'org.projectlombok:lombok:1.18.+'
+}
+
+sourceSets {
+    test {
+        java {
+            srcDir 'src/test/unit/java'
+        }
+    }
+    integrationTest {
+        java {
+            srcDir 'src/test/integ/java'
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+        resources.srcDir 'src/test/resources'
+    }
+}
+
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+test.useJUnitPlatform()
+integrationTest.useJUnitPlatform()
+
+configurations {
+    integrationTestCompile.extendsFrom(testImplementation)
+    integrationTestRuntime.extendsFrom(testRuntime)
+}
+
+configurations.compile { transitive = false }

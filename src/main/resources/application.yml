@@ -1,0 +1,77 @@
+server:
+  port: ${KAFKA_RETRY_HTTP_PORT:8080}
+spring:
+  application:
+    name: ${KAFKA_RETRY_APP_NAME:kafka-retry}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  kafka:
+    jaas:
+      enabled: ${KAFKA_RETRY_JAAS_ENABLED:false}
+      options:
+        username: ${KAFKA_RETRY_JAAS_USERNAME}
+        password: ${KAFKA_RETRY_JAAS_PASSWORD}
+      login-module: ${KAFKA_RETRY_JAAS_LOGIN_MODULE:org.apache.kafka.common.security.plain.PlainLoginModule}
+    properties:
+      security:
+        protocol: ${KAFKA_RETRY_SECURITY_PROTOCOL:PLAINTEXT}
+      sasl:
+        mechanism: ${KAFKA_RETRY_SASL_MECHANISM:PLAIN}
+      ssl:
+        protocol: ${KAFKA_RETRY_SSL_PROTOCOL:TLSv1.2}
+        enabled:
+          protocols: ${KAFKA_RETRY_SSL_ENABLED_PROTOCOLS:TLSv1.2}
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_RETRY_BOOTSTRAP_SERVERS:localhost:9091}
+        streams:
+          binder:
+            brokers: ${KAFKA_RETRY_BOOTSTRAP_SERVERS:localhost:9091}
+            replicationFactor: ${KAFKA_RETRY_REPLICATION_FACTOR:3}
+            configuration:
+              replication:
+                factor: ${KAFKA_RETRY_REPLICATION_FACTOR:3}
+              default:
+                key:
+                  serde: ${KAFKA_RETRY_DEFAULT_KEY_SERDE:org.apache.kafka.common.serialization.Serdes$StringSerde}
+          bindings:
+            retryInput:
+              consumer:
+                applicationId: ${KAFKA_RETRY_STREAMS_APP_ID:${KAFKA_RETRY_APP_NAME}}
+                keySerde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                valueSerde: com.ibm.cms.retry.consumer.serde.MessageSerde
+
+      bindings:
+        retryInput:
+          destination: ${KAFKA_RETRY_INPUT_TOPIC:retry}
+
+management:
+  health:
+    binders:
+      enabled: ${KAFKA_RETRY_ENABLE_HEALTH:true}
+
+logging:
+  level:
+    com.ibm.kafka.retry.*: ${KAFKA_RETRY_LOG_LEVEL_IBM:INFO}
+    org.apache.kafka.*: ${KAFKA_RETRY_LOG_LEVEL_APACHE:INFO}
+
+com:
+  ibm:
+    kafka:
+      retry:
+        retriable-exception: ${KAFKA_RETRY_RETRIABLE_EXCEPTION}
+        fatal-exception: ${KAFKA_RETRY_FATAL_EXCEPTION}
+        droppable-exception: ${KAFKA_RETRY_DROPPABLE_EXCEPTION}
+        permanent-failure-topic: ${KAFKA_RETRY_DLQ_TOPIC:dlq}
+        retry-info-store-name: ${KAFKA_RETRY_STORE_NAME:retry-queue}
+        retry-scheduler-interval-ms: ${KAFKA_RETRY_PUNCTUATION_INTERVAL_MS:10000}
+        retry-delays-ms:
+          1: ${KAFKA_RETRY_FIRST_DELAY_MS:20000}
+          2: ${KAFKA_RETRY_SECOND_DELAY_MS:40000}
+          3: ${KAFKA_RETRY_THIRD_DELAY_MS:60000}
+
+
