@@ -16,7 +16,7 @@ processing this message may block processing for other upstream messages. Indeed
 could be processed successfully, and it often makes little sense to block or delay _all_ message processing in the application due to the current failure.
 
 So what should the application do now? Should the failed message simply be discarded? It may be that the system architecture involved can deal with this data loss, 
-but it cases where this is unacceptable it makes more sense to use another message retry layer. This is precisely the capability that the 
+but in cases where this is unacceptable it makes more sense to use another message retry layer. This is precisely the capability that the 
 Kafka Retry project provides: messages can be forwarded to a **retry topic**, and based on criteria determined
 by message headers, the message can be sent back to its origin topic at some later time. Further actions may also be taken such as sending
 a message to a **permanent failure** topic (Dead Letter Queue) when the allowed retry attempts have been exhausted.
