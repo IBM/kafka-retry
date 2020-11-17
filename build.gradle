@@ -91,5 +91,5 @@ configurations {
 configurations.compile { transitive = false }
 
 nebulaRelease {
-    releaseBranchPatterns = [/master/] as Set
+    releaseBranchPatterns = [/main/] as Set
 }
