@@ -55,6 +55,7 @@ dependencies {
     testImplementation 'org.apache.kafka:kafka-streams-test-utils'
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-stream', classifier: 'test-binder'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.+'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.+'
     testCompileOnly 'org.projectlombok:lombok:1.18.+'
 }
 
