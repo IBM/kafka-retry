@@ -14,6 +14,7 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'nebula.release' version '15.3.0'
 }
 
 apply plugin: 'org.springframework.boot'
@@ -88,3 +89,7 @@ configurations {
 }
 
 configurations.compile { transitive = false }
+
+nebulaRelease {
+    releaseBranchPatterns = [/master/] as Set
+}
