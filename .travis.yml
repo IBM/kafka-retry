@@ -18,7 +18,7 @@ jobs:
   include:
     - if: branch = main
       script: pipeline/build.sh
-    - if: branch = main AND tag IS present AND type != pull_request
+    - if: branch =~ ^v.*$ AND tag IS present AND type != pull_request
       script: pipeline/build.sh && pipeline/push.sh
 
 
