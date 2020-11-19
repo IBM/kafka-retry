@@ -20,4 +20,5 @@ cache:
 
 script:
   - ./gradlew clean build
+  - docker build -t kafka-retry:${TRAVIS_COMMIT} -f docker/Dockerfile .
 
