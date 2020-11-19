@@ -41,6 +41,7 @@ is queued for retry.
 4. If mandatory headers are not present (see below) at any stage then an error is logged and the message is discarded.
 
 ## Usage
+Docker images are available on [DockerHub](https://hub.docker.com/r/ibmcom/kafka-retry).
 Requirements and configuration for deploying Kafka Retry are discussed below. Familiarity with deploying Kafka Streams
 applications is assumed.
 
